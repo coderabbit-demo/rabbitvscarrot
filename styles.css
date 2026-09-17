@@ -110,8 +110,30 @@ h1 {
 
 .field {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.5rem 0.6rem;
   font-size: 1rem;
+  border: 1px solid #e6c9a3;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.field:focus {
+  outline: 2px solid var(--carrot);
+  outline-offset: 1px;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  background: var(--carrot);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--carrot-dark);
 }
 
 .room-info {
