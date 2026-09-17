@@ -11,6 +11,10 @@
   const codeInput = document.getElementById('code');
   const createBtn = document.getElementById('create');
   const joinBtn = document.getElementById('join');
+  const chatPanel = document.getElementById('chat');
+  const chatLog = document.getElementById('chat-log');
+  const chatInput = document.getElementById('chat-input');
+  const chatSend = document.getElementById('chat-send');
 
   let net = null;
   let myMark = null;
@@ -30,6 +34,7 @@
         online = true;
         roomInfo.textContent = `Room ${msg.code} — you are ${NAMES[msg.mark]} ${MARKS[msg.mark]}`;
         lobby.classList.add('hidden');
+        chatPanel.classList.remove('hidden');
         buildBoard();
         renderBoard();
         break;
@@ -37,6 +42,12 @@
         board = msg.board;
         turn = msg.turn;
         renderBoard();
+        break;
+      case 'opponent':
+        addSystem(`${msg.name} joined`);
+        break;
+      case 'chat':
+        addChat(msg.name, msg.text);
         break;
       case 'error':
         roomInfo.textContent = msg.message;
@@ -90,6 +101,34 @@
 
   resetEl.addEventListener('click', () => {
     if (online && net) net.send({ type: 'reset' });
+  });
+
+  function addChat(name, text) {
+    const line = document.createElement('div');
+    line.className = 'chat-line';
+    line.innerHTML = `<b>${name}</b>: ${text}`;
+    chatLog.appendChild(line);
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  function addSystem(text) {
+    const line = document.createElement('div');
+    line.className = 'chat-line system';
+    line.innerHTML = text;
+    chatLog.appendChild(line);
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
+
+  function sendChat() {
+    const text = chatInput.value.trim();
+    if (!text || !net) return;
+    net.send({ type: 'chat', text });
+    chatInput.value = '';
+  }
+
+  chatSend.addEventListener('click', sendChat);
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendChat();
   });
 
   createBtn.addEventListener('click', () => {

@@ -23,6 +23,14 @@
 
     <div id="board" class="board" role="grid" aria-label="Tic-tac-toe board"></div>
     <button id="reset" class="reset" type="button">Reset</button>
+
+    <div id="chat" class="chat hidden">
+      <div id="chat-log" class="chat-log"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" class="field" type="text" placeholder="Message" maxlength="200">
+        <button id="chat-send" class="btn" type="button">Send</button>
+      </div>
+    </div>
   </main>
   <script src="src/game.js"></script>
   <script src="src/net.js"></script>

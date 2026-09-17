@@ -1,7 +1,7 @@
 const http = require('http');
 const { WebSocketServer } = require('ws');
 const { serveStatic } = require('./static');
-const { createRoom, joinRoom, applyMove, resetBoard } = require('./rooms');
+const { createRoom, joinRoom, applyMove, resetBoard, playerFor } = require('./rooms');
 
 const PORT = process.env.PORT || 8080;
 
@@ -66,6 +66,14 @@ function handle(socket, msg) {
       if (!room) break;
       resetBoard(room);
       broadcastState(room);
+      break;
+    }
+    case 'chat': {
+      const room = socket.room;
+      if (!room) break;
+      const me = playerFor(room, socket);
+      const payload = { type: 'chat', name: me ? me.name : 'Anon', text: msg.text };
+      room.players.forEach((p) => send(p.socket, payload));
       break;
     }
     default:
