@@ -1,7 +1,7 @@
 const http = require('http');
 const { WebSocketServer } = require('ws');
 const { serveStatic } = require('./static');
-const { createRoom, joinRoom } = require('./rooms');
+const { createRoom, joinRoom, applyMove, resetBoard } = require('./rooms');
 
 const PORT = process.env.PORT || 8080;
 
@@ -27,6 +27,11 @@ function send(socket, msg) {
   if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(msg));
 }
 
+function broadcastState(room) {
+  const payload = { type: 'state', board: room.board, turn: room.turn };
+  room.players.forEach((p) => send(p.socket, payload));
+}
+
 function handle(socket, msg) {
   switch (msg.type) {
     case 'create': {
@@ -46,6 +51,21 @@ function handle(socket, msg) {
       send(guest.socket, { type: 'joined', code: room.code, mark: 'C' });
       send(host.socket, { type: 'opponent', name: guest.name });
       send(guest.socket, { type: 'opponent', name: host.name });
+      broadcastState(room);
+      break;
+    }
+    case 'move': {
+      const room = socket.room;
+      if (!room) break;
+      applyMove(room, msg.index, msg.player);
+      broadcastState(room);
+      break;
+    }
+    case 'reset': {
+      const room = socket.room;
+      if (!room) break;
+      resetBoard(room);
+      broadcastState(room);
       break;
     }
     default:

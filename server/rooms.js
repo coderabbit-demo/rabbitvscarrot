@@ -31,4 +31,14 @@ function playerFor(room, socket) {
   return room.players.find((p) => p.socket === socket) || null;
 }
 
-module.exports = { rooms, createRoom, joinRoom, playerFor };
+function applyMove(room, index, player) {
+  room.board[index] = player;
+  room.turn = player === 'R' ? 'C' : 'R';
+}
+
+function resetBoard(room) {
+  room.board = Array(9).fill(null);
+  room.turn = 'R';
+}
+
+module.exports = { rooms, createRoom, joinRoom, playerFor, applyMove, resetBoard };
