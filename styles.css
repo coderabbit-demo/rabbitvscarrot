@@ -91,3 +91,83 @@ h1 {
 .reset:hover {
   background: var(--carrot-dark);
 }
+
+.hidden {
+  display: none;
+}
+
+.lobby {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.join-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.field {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #e6c9a3;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.field:focus {
+  outline: 2px solid var(--carrot);
+  outline-offset: 1px;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: #fff;
+  background: var(--carrot);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--carrot-dark);
+}
+
+.room-info {
+  min-height: 1.4em;
+  font-size: 0.95rem;
+  color: var(--carrot-dark);
+}
+
+.chat {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.chat-log {
+  height: 140px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  background: #fff;
+  border: 1px solid #e6c9a3;
+  border-radius: 8px;
+}
+
+.chat-line {
+  font-size: 0.9rem;
+  margin: 0.15rem 0;
+}
+
+.chat-line.system {
+  color: #888;
+  font-style: italic;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
