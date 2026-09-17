@@ -1,0 +1,33 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #fff7ec;
+  margin: 0;
+}
+
+.app {
+  max-width: 360px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+h1 {
+  color: #e8730c;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.cell {
+  aspect-ratio: 1;
+  font-size: 2.5rem;
+  background: #fff;
+  border: 2px solid #e8730c;
+  cursor: pointer;
+}
+
+.reset {
+  margin-top: 1rem;
+}
