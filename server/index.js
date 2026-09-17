@@ -1,6 +1,7 @@
 const http = require('http');
 const { WebSocketServer } = require('ws');
 const { serveStatic } = require('./static');
+const { createRoom, joinRoom } = require('./rooms');
 
 const PORT = process.env.PORT || 8080;
 
@@ -22,8 +23,31 @@ wss.on('connection', (socket) => {
   });
 });
 
+function send(socket, msg) {
+  if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(msg));
+}
+
 function handle(socket, msg) {
   switch (msg.type) {
+    case 'create': {
+      const room = createRoom(socket, msg.name);
+      socket.room = room;
+      send(socket, { type: 'joined', code: room.code, mark: 'R' });
+      break;
+    }
+    case 'join': {
+      const room = joinRoom(msg.code, socket, msg.name);
+      if (!room) {
+        send(socket, { type: 'error', message: 'Room not found or full' });
+        break;
+      }
+      socket.room = room;
+      const [host, guest] = room.players;
+      send(guest.socket, { type: 'joined', code: room.code, mark: 'C' });
+      send(host.socket, { type: 'opponent', name: guest.name });
+      send(guest.socket, { type: 'opponent', name: host.name });
+      break;
+    }
     default:
       break;
   }
