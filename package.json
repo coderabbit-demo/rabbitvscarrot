@@ -1,0 +1,12 @@
+{
+  "name": "rabbitvscarrot",
+  "version": "1.0.0",
+  "description": "Tic-Tac-Toe in the browser with a rabbit and a carrot, now with online play",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
