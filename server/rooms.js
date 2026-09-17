@@ -41,4 +41,20 @@ function resetBoard(room) {
   room.turn = 'R';
 }
 
-module.exports = { rooms, createRoom, joinRoom, playerFor, applyMove, resetBoard };
+// Removes the socket's room and returns the remaining player, if any.
+function handleDisconnect(socket) {
+  const room = socket.room;
+  if (!room) return null;
+  rooms.delete(room.code);
+  return room.players.find((p) => p.socket !== socket) || null;
+}
+
+module.exports = {
+  rooms,
+  createRoom,
+  joinRoom,
+  playerFor,
+  applyMove,
+  resetBoard,
+  handleDisconnect,
+};

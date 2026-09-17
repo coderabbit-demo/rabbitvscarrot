@@ -49,6 +49,9 @@
       case 'chat':
         addChat(msg.name, msg.text);
         break;
+      case 'left':
+        addSystem('Opponent left');
+        break;
       case 'error':
         roomInfo.textContent = msg.message;
         break;

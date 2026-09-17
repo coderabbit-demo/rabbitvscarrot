@@ -1,7 +1,14 @@
 const http = require('http');
 const { WebSocketServer } = require('ws');
 const { serveStatic } = require('./static');
-const { createRoom, joinRoom, applyMove, resetBoard, playerFor } = require('./rooms');
+const {
+  createRoom,
+  joinRoom,
+  applyMove,
+  resetBoard,
+  playerFor,
+  handleDisconnect,
+} = require('./rooms');
 
 const PORT = process.env.PORT || 8080;
 
@@ -20,6 +27,11 @@ wss.on('connection', (socket) => {
       return;
     }
     handle(socket, msg);
+  });
+
+  socket.on('close', () => {
+    const other = handleDisconnect(socket);
+    if (other) send(other.socket, { type: 'left' });
   });
 });
 
