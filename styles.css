@@ -91,3 +91,31 @@ h1 {
 .reset:hover {
   background: var(--carrot-dark);
 }
+
+.hidden {
+  display: none;
+}
+
+.lobby {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.join-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.field {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.room-info {
+  min-height: 1.4em;
+  font-size: 0.95rem;
+  color: var(--carrot-dark);
+}
