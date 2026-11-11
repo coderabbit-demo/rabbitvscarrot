@@ -26,6 +26,7 @@
   function play(index) {
     if (!move(state, index)) return;
     render();
+    if (state.over) window.Leaderboard.record(state.winner);
   }
 
   function render() {
@@ -54,6 +55,8 @@
   }
 
   resetEl.addEventListener('click', reset);
+  document.getElementById('clear-scores').addEventListener('click', window.Leaderboard.clear);
+  window.Leaderboard.render();
   build();
   render();
 })();

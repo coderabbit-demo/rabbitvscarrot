@@ -12,8 +12,15 @@
     <p id="status" class="status">Rabbit 🐰 to move</p>
     <div id="board" class="board" role="grid" aria-label="Tic-tac-toe board"></div>
     <button id="reset" class="reset" type="button">Reset</button>
+    <section class="leaderboard" aria-labelledby="lb-title">
+      <h2 id="lb-title">Leaderboard</h2>
+      <ol id="leaderboard"></ol>
+      <p id="draws" class="draws"></p>
+      <button id="clear-scores" class="clear" type="button">Clear scores</button>
+    </section>
   </main>
   <script src="src/game.js"></script>
+  <script src="src/leaderboard.js"></script>
   <script src="src/ui.js"></script>
 </body>
 </html>
