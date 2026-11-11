@@ -1,5 +1,5 @@
 (function () {
-  const { createGame, move, PLAYERS } = window.Game;
+  const { createGame, move, undo, PLAYERS } = window.Game;
 
   const MARKS = { [PLAYERS.RABBIT]: '🐰', [PLAYERS.CARROT]: '🥕' };
   const NAMES = { [PLAYERS.RABBIT]: 'Rabbit', [PLAYERS.CARROT]: 'Carrot' };
@@ -7,6 +7,7 @@
   const boardEl = document.getElementById('board');
   const statusEl = document.getElementById('status');
   const resetEl = document.getElementById('reset');
+  const undoEl = document.getElementById('undo');
 
   let state = createGame();
   const cells = [];
@@ -29,6 +30,7 @@
   }
 
   function render() {
+    cells.forEach((cell) => cell.classList.remove('win'));
     state.board.forEach((mark, i) => {
       cells[i].textContent = mark ? MARKS[mark] : '';
       cells[i].disabled = mark !== null || state.over;
@@ -42,18 +44,19 @@
     } else {
       statusEl.textContent = `${NAMES[state.turn]} ${MARKS[state.turn]} to move`;
     }
+
+    undoEl.disabled = state.history.length === 0;
   }
 
   function reset() {
     state = createGame();
-    cells.forEach((cell) => {
-      cell.classList.remove('win');
-      cell.disabled = false;
-    });
     render();
   }
 
   resetEl.addEventListener('click', reset);
+  undoEl.addEventListener('click', () => {
+    if (undo(state)) render();
+  });
   build();
   render();
 })();

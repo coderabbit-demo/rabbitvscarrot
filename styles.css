@@ -91,3 +91,16 @@ h1 {
 .reset:hover {
   background: var(--carrot-dark);
 }
+
+.reset + .reset {
+  margin-left: 0.5rem;
+}
+
+.reset:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.reset:disabled:hover {
+  background: var(--carrot);
+}

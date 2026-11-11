@@ -16,6 +16,7 @@
       winner: null,              // 'R', 'C', or null
       line: null,                // winning line indices, when there is a winner
       over: false,               // true on win or draw
+      history: [],               // cell indices in the order they were played
     };
   }
 
@@ -25,6 +26,7 @@
     if (state.over || state.board[index] !== null) return false;
 
     state.board[index] = state.turn;
+    state.history.push(index);
 
     const win = findWinner(state.board);
     if (win) {
@@ -40,6 +42,19 @@
     return true;
   }
 
+  // Take back the last move. Returns true if there was one to undo.
+  // Rabbit moves first, so whoever made move N is fixed by the parity of N.
+  function undo(state) {
+    if (state.history.length === 0) return false;
+
+    state.board[state.history.pop()] = null;
+    state.turn = state.history.length % 2 === 0 ? PLAYERS.RABBIT : PLAYERS.CARROT;
+    state.winner = null;
+    state.line = null;
+    state.over = false;
+    return true;
+  }
+
   // Returns { player, line } for a completed line, or null.
   function findWinner(board) {
     for (const line of WINNING_LINES) {
@@ -51,5 +66,5 @@
     return null;
   }
 
-  global.Game = { PLAYERS, createGame, move, findWinner };
+  global.Game = { PLAYERS, createGame, move, undo, findWinner };
 })(typeof window !== 'undefined' ? window : globalThis);
