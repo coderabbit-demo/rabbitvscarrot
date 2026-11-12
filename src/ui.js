@@ -39,7 +39,12 @@
   }
 
   function playChallenge(index) {
-    if (challenge.locked || !move(state, index)) return;
+    if (challenge.locked) return;
+    if (challenge.puzzle.key !== Daily.dateKey()) {
+      setMode(true); // past midnight: load today's puzzle instead of crediting yesterday's
+      return;
+    }
+    if (!move(state, index)) return;
     challenge.rabbitMoves += 1;
 
     if (state.winner === PLAYERS.RABBIT) return finishChallenge(true);
