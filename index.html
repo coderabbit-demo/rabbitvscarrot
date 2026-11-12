@@ -9,9 +9,18 @@
 <body>
   <main class="app">
     <h1>rabbit <span class="vs">vs</span> carrot</h1>
+    <div class="modes" role="group" aria-label="Game mode">
+      <button id="mode-free" class="mode" type="button" aria-pressed="true">Free play</button>
+      <button id="mode-daily" class="mode" type="button" aria-pressed="false">Daily challenge</button>
+    </div>
     <p id="status" class="status">Rabbit 🐰 to move</p>
     <div id="board" class="board" role="grid" aria-label="Tic-tac-toe board"></div>
     <button id="reset" class="reset" type="button">Reset</button>
+    <section class="daily" aria-labelledby="daily-title">
+      <h2 id="daily-title">Daily streak</h2>
+      <p id="streak" class="streak"></p>
+      <p id="daily-note" class="daily-note"></p>
+    </section>
     <section class="leaderboard" aria-labelledby="lb-title">
       <h2 id="lb-title">Leaderboard</h2>
       <ol id="leaderboard"></ol>
@@ -21,6 +30,7 @@
   </main>
   <script src="src/game.js"></script>
   <script src="src/leaderboard.js"></script>
+  <script src="src/daily.js"></script>
   <script src="src/ui.js"></script>
 </body>
 </html>
