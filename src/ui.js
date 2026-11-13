@@ -144,6 +144,7 @@
       challenge = null;
     }
     startGame();
+    renderDaily();
   }
 
   resetEl.addEventListener('click', startGame);
