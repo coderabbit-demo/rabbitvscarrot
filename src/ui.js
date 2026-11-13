@@ -118,6 +118,11 @@
     clearTimer();
     cells.forEach((cell) => cell.classList.remove('win'));
     if (challenge) {
+      if (challenge.puzzle.key !== Daily.dateKey()) {
+        const fresh = Daily.puzzleFor(Daily.dateKey());
+        if (!fresh) return setMode(false);
+        challenge.puzzle = fresh;
+      }
       state = createGame();
       state.board = challenge.puzzle.board.slice();
       challenge = { puzzle: challenge.puzzle, rabbitMoves: 0, locked: false, message: '' };
