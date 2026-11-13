@@ -165,16 +165,20 @@
   function save(data) {
     try {
       localStorage.setItem(KEY, JSON.stringify(data));
+      return true;
     } catch (e) {
       // storage unavailable; the streak lasts for this page view only
+      return false;
     }
   }
 
   let data = load();
+  let unsaved = false; // progress that could not be persisted; keep it over stored data
 
   // Re-read storage so another tab's progress is never overwritten; keep the
   // in-memory state when storage is unreadable or empty.
   function refresh() {
+    if (unsaved) return;
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) data = { ...EMPTY, ...JSON.parse(raw) };
@@ -191,7 +195,7 @@
   function complete() {
     refresh();
     data = completeOn(data, dateKey());
-    save(data);
+    unsaved = !save(data);
     return statusOf(data, dateKey());
   }
 
