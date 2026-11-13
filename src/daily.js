@@ -172,11 +172,24 @@
 
   let data = load();
 
+  // Re-read storage so another tab's progress is never overwritten; keep the
+  // in-memory state when storage is unreadable or empty.
+  function refresh() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) data = { ...EMPTY, ...JSON.parse(raw) };
+    } catch (e) {
+      // keep in-memory state
+    }
+  }
+
   function status() {
+    refresh();
     return statusOf(data, dateKey());
   }
 
   function complete() {
+    refresh();
     data = completeOn(data, dateKey());
     save(data);
     return statusOf(data, dateKey());
