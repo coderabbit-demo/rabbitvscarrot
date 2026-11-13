@@ -37,6 +37,28 @@ h1 {
   font-style: italic;
 }
 
+.modes {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.mode {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  color: var(--carrot-dark);
+  background: #fff;
+  border: 2px solid var(--carrot);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.mode[aria-pressed="true"] {
+  color: #fff;
+  background: var(--carrot);
+}
+
 .status {
   font-size: 1.15rem;
   min-height: 1.6em;
@@ -131,4 +153,28 @@ h1 {
   color: var(--carrot-dark);
   cursor: pointer;
   text-decoration: underline;
+}
+
+.daily {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.daily h2 {
+  color: var(--leaf);
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem;
+}
+
+.daily .streak {
+  font-size: 1.1rem;
+  margin: 0 0 0.25rem;
+}
+
+.daily .daily-note {
+  color: #777;
+  margin: 0;
 }
