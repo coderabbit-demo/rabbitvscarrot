@@ -122,6 +122,7 @@
         const fresh = Daily.puzzleFor(Daily.dateKey());
         if (!fresh) return setMode(false);
         challenge.puzzle = fresh;
+        renderDaily();
       }
       state = createGame();
       state.board = challenge.puzzle.board.slice();
