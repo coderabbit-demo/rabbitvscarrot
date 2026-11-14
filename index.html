@@ -13,6 +13,14 @@
       <button id="mode-free" class="mode" type="button" aria-pressed="true">Free play</button>
       <button id="mode-daily" class="mode" type="button" aria-pressed="false">Daily challenge</button>
     </div>
+    <label class="opponent" id="opponent-wrap">Opponent
+      <select id="opponent">
+        <option value="human">Two players</option>
+        <option value="easy">Computer: easy</option>
+        <option value="medium">Computer: medium</option>
+        <option value="hard">Computer: unbeatable</option>
+      </select>
+    </label>
     <p id="status" class="status">Rabbit 🐰 to move</p>
     <div id="board" class="board" role="grid" aria-label="Tic-tac-toe board"></div>
     <button id="reset" class="reset" type="button">Reset</button>
@@ -31,6 +39,7 @@
   <script src="src/game.js"></script>
   <script src="src/leaderboard.js"></script>
   <script src="src/daily.js"></script>
+  <script src="src/ai.js"></script>
   <script src="src/ui.js"></script>
 </body>
 </html>
