@@ -1,6 +1,6 @@
 (function () {
   const { createGame, move, PLAYERS } = window.Game;
-  const { Daily } = window;
+  const { Daily, Ai } = window;
 
   const MARKS = { [PLAYERS.RABBIT]: '🐰', [PLAYERS.CARROT]: '🥕' };
   const NAMES = { [PLAYERS.RABBIT]: 'Rabbit', [PLAYERS.CARROT]: 'Carrot' };
@@ -12,11 +12,14 @@
   const modeFreeEl = document.getElementById('mode-free');
   const modeDailyEl = document.getElementById('mode-daily');
   const streakEl = document.getElementById('streak');
+  const opponentEl = document.getElementById('opponent');
+  const opponentWrapEl = document.getElementById('opponent-wrap');
   const dailyNoteEl = document.getElementById('daily-note');
 
   let state = createGame();
   let challenge = null; // { puzzle, rabbitMoves, locked, message } while in daily mode
   let carrotTimer = null;
+  let opponent = Ai.loadLevel(); // 'human' or an Ai level; the computer plays the carrot in free play
   const cells = [];
 
   function build() {
@@ -33,9 +36,25 @@
 
   function play(index) {
     if (challenge) return playChallenge(index);
+    if (computerTurn()) return;
     if (!move(state, index)) return;
+    afterFreeMove();
+  }
+
+  function computerTurn() {
+    return opponent !== 'human' && (state.turn === PLAYERS.CARROT || carrotTimer !== null);
+  }
+
+  function afterFreeMove() {
     render();
-    if (state.over) window.Leaderboard.record(state.winner);
+    if (state.over) return window.Leaderboard.record(state.winner);
+    if (computerTurn()) {
+      carrotTimer = setTimeout(() => {
+        carrotTimer = null;
+        move(state, Ai.chooseMove(state.board, PLAYERS.CARROT, opponent));
+        afterFreeMove();
+      }, CARROT_DELAY_MS);
+    }
   }
 
   function playChallenge(index) {
@@ -76,7 +95,8 @@
   function render() {
     state.board.forEach((mark, i) => {
       cells[i].textContent = mark ? MARKS[mark] : '';
-      cells[i].disabled = mark !== null || state.over || (challenge !== null && challenge.locked);
+      cells[i].disabled = mark !== null || state.over || (challenge !== null && challenge.locked) ||
+        (challenge === null && computerTurn());
     });
     if (state.line) state.line.forEach((i) => cells[i].classList.add('win'));
 
@@ -91,6 +111,7 @@
     } else {
       statusEl.textContent = `${NAMES[state.turn]} ${MARKS[state.turn]} to move`;
     }
+    opponentWrapEl.hidden = challenge !== null;
     resetEl.textContent = challenge ? 'Retry' : 'Reset';
   }
 
@@ -147,6 +168,12 @@
     renderDaily();
   }
 
+  opponentEl.value = opponent;
+  opponentEl.addEventListener('change', () => {
+    opponent = opponentEl.value;
+    Ai.saveLevel(opponent);
+    startGame();
+  });
   resetEl.addEventListener('click', startGame);
   modeFreeEl.addEventListener('click', () => setMode(false));
   modeDailyEl.addEventListener('click', () => setMode(true));

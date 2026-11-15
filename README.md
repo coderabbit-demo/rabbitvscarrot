@@ -16,6 +16,16 @@ Open `index.html` in any modern browser.
 - If the board fills up with no winner, it's a draw.
 - Press **Reset** to start a new game.
 
+## Play vs computer
+
+Use the **Opponent** menu to play the carrot 🥕 against the computer (you are the rabbit 🐰, who moves first):
+
+- **Easy**: picks a random free cell.
+- **Medium**: wins or blocks when it can, otherwise random.
+- **Unbeatable**: minimax, so the best you can do is draw.
+
+Your choice is remembered in localStorage. Wins still count towards the leaderboard. The daily challenge always uses its own carrot.
+
 ## Daily challenge
 
 Switch to **Daily challenge** for a new puzzle every day (the same one all day, reset at local midnight):
@@ -32,6 +42,7 @@ index.html    # markup and entry point
 styles.css    # board styling
 src/game.js   # pure game logic (no DOM)
 src/leaderboard.js # rabbit vs carrot win tally (localStorage)
+src/ai.js     # computer opponent: easy / medium / minimax (no DOM)
 src/daily.js  # seeded daily puzzle and streak logic (no DOM)
 src/ui.js     # DOM rendering and input handling
 ```
