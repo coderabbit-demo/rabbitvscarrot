@@ -14,6 +14,9 @@
   const streakEl = document.getElementById('streak');
   const opponentEl = document.getElementById('opponent');
   const opponentWrapEl = document.getElementById('opponent-wrap');
+  const nameRabbitEl = document.getElementById('name-rabbit');
+  const nameCarrotEl = document.getElementById('name-carrot');
+  const namesEl = document.getElementById('names');
   const dailyNoteEl = document.getElementById('daily-note');
 
   let state = createGame();
@@ -34,6 +37,15 @@
     }
   }
 
+  // Ladder identities. Against the computer the carrot is a rated bot named after its level.
+  function playerNames() {
+    const { cleanName } = window.Ladder;
+    const carrot = opponent === 'human'
+      ? cleanName(nameCarrotEl.value, 'Carrot')
+      : `Computer (${opponent})`;
+    return { R: cleanName(nameRabbitEl.value, 'Rabbit'), C: carrot };
+  }
+
   function play(index) {
     if (challenge) return playChallenge(index);
     if (computerTurn()) return;
@@ -47,7 +59,7 @@
 
   function afterFreeMove() {
     render();
-    if (state.over) return window.Leaderboard.record(state.winner);
+    if (state.over) return window.Leaderboard.record(state.winner, playerNames());
     if (computerTurn()) {
       carrotTimer = setTimeout(() => {
         carrotTimer = null;
@@ -112,6 +124,9 @@
       statusEl.textContent = `${NAMES[state.turn]} ${MARKS[state.turn]} to move`;
     }
     opponentWrapEl.hidden = challenge !== null;
+    namesEl.hidden = challenge !== null;
+    nameCarrotEl.disabled = opponent !== 'human';
+    nameCarrotEl.parentElement.hidden = opponent !== 'human';
     resetEl.textContent = challenge ? 'Retry' : 'Reset';
   }
 
@@ -168,12 +183,17 @@
     renderDaily();
   }
 
+  const saved = window.Leaderboard.savedNames();
+  if (saved.R) nameRabbitEl.value = saved.R;
+  if (saved.C && !/^Computer \(/.test(saved.C)) nameCarrotEl.value = saved.C;
   opponentEl.value = opponent;
   opponentEl.addEventListener('change', () => {
     opponent = opponentEl.value;
     Ai.saveLevel(opponent);
     startGame();
   });
+  // Changing a name mid-game would credit the result to a different player, so restart.
+  [nameRabbitEl, nameCarrotEl].forEach((el) => el.addEventListener('change', startGame));
   resetEl.addEventListener('click', startGame);
   modeFreeEl.addEventListener('click', () => setMode(false));
   modeDailyEl.addEventListener('click', () => setMode(true));

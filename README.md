@@ -26,6 +26,15 @@ Use the **Opponent** menu to play the carrot 🥕 against the computer (you are 
 
 Your choice is remembered in localStorage. Wins still count towards the leaderboard. The daily challenge always uses its own carrot.
 
+## Player names and Elo ladder
+
+Type a name for the 🐰 player (and the 🥕 player in two-player mode). Finished free-play games update a ranked **ladder**:
+
+- Everyone starts on **1000 Elo** (K-factor 32). Beat a higher-rated player to gain more.
+- Each row shows rank, name, W/L/D record and rating. Names are case-insensitive and capped at 16 characters.
+- Against the computer, the carrot is a rated bot per level (e.g. "Computer (hard)"). If both sides use the same name the game is unrated.
+- Ladder, names and the raw species tally are stored in localStorage; **Clear scores** resets the ladder.
+
 ## Daily challenge
 
 Switch to **Daily challenge** for a new puzzle every day (the same one all day, reset at local midnight):
@@ -41,7 +50,8 @@ Switch to **Daily challenge** for a new puzzle every day (the same one all day, 
 index.html    # markup and entry point
 styles.css    # board styling
 src/game.js   # pure game logic (no DOM)
-src/leaderboard.js # rabbit vs carrot win tally (localStorage)
+src/ladder.js # player names, Elo and ranking logic (no DOM)
+src/leaderboard.js # ladder rendering and rabbit vs carrot tally (localStorage)
 src/ai.js     # computer opponent: easy / medium / minimax (no DOM)
 src/daily.js  # seeded daily puzzle and streak logic (no DOM)
 src/ui.js     # DOM rendering and input handling

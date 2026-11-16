@@ -21,6 +21,10 @@
         <option value="hard">Computer: unbeatable</option>
       </select>
     </label>
+    <div class="names" id="names">
+      <label>🐰 Player <input id="name-rabbit" type="text" maxlength="16" value="Rabbit" autocomplete="off"></label>
+      <label>🥕 Player <input id="name-carrot" type="text" maxlength="16" value="Carrot" autocomplete="off"></label>
+    </div>
     <p id="status" class="status">Rabbit 🐰 to move</p>
     <div id="board" class="board" role="grid" aria-label="Tic-tac-toe board"></div>
     <button id="reset" class="reset" type="button">Reset</button>
@@ -30,13 +34,14 @@
       <p id="daily-note" class="daily-note"></p>
     </section>
     <section class="leaderboard" aria-labelledby="lb-title">
-      <h2 id="lb-title">Leaderboard</h2>
+      <h2 id="lb-title">Ranked ladder</h2>
       <ol id="leaderboard"></ol>
       <p id="draws" class="draws"></p>
       <button id="clear-scores" class="clear" type="button">Clear scores</button>
     </section>
   </main>
   <script src="src/game.js"></script>
+  <script src="src/ladder.js"></script>
   <script src="src/leaderboard.js"></script>
   <script src="src/daily.js"></script>
   <script src="src/ai.js"></script>
