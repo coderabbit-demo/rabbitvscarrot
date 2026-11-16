@@ -21,7 +21,7 @@
 
   let scores = load();
 
-  // `names` is optional: { R: 'Alice', C: 'Bob' } to also update the ranked ladder.
+  // `names` is optional: { R: 'Alice', C: 'Bob', bot: false } to also update the ranked ladder.
   let ladder = window.Ladder.load();
 
   function record(winner, names) {
@@ -31,7 +31,8 @@
     if (names) {
       const score = winner === 'R' ? 1 : winner === 'C' ? 0 : 0.5;
       const result = window.Ladder.applyResult(ladder.players, names.R, names.C, score);
-      ladder.names = { R: names.R, C: names.C };
+      // Remember only what a human typed; a bot identity must not overwrite the saved carrot name.
+      ladder.names = { R: names.R, C: names.bot ? ladder.names.C : names.C };
       window.Ladder.save(ladder);
       lastChange = result ? { R: result.a, C: result.b, names } : null;
     }

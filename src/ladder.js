@@ -11,8 +11,9 @@
     return name || fallback;
   }
 
+  // Prefixed so names like "__proto__" or "constructor" never collide with Object.prototype members.
   function nameKey(name) {
-    return name.toLowerCase();
+    return 'p:' + name.toLowerCase();
   }
 
   function newPlayer(name) {
@@ -29,8 +30,9 @@
     const ka = nameKey(nameA);
     const kb = nameKey(nameB);
     if (ka === kb) return null;
-    const a = players[ka] || (players[ka] = newPlayer(nameA));
-    const b = players[kb] || (players[kb] = newPlayer(nameB));
+    const own = (k) => Object.prototype.hasOwnProperty.call(players, k);
+    const a = own(ka) ? players[ka] : (players[ka] = newPlayer(nameA));
+    const b = own(kb) ? players[kb] : (players[kb] = newPlayer(nameB));
     a.name = nameA;
     b.name = nameB;
     const ea = expected(a.elo, b.elo);

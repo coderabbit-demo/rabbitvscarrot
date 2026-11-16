@@ -22,6 +22,7 @@
   let state = createGame();
   let challenge = null; // { puzzle, rabbitMoves, locked, message } while in daily mode
   let carrotTimer = null;
+  let gameNames = null; // identities captured when the game starts, so edits mid-game can't misattribute it
   let opponent = Ai.loadLevel(); // 'human' or an Ai level; the computer plays the carrot in free play
   const cells = [];
 
@@ -43,7 +44,7 @@
     const carrot = opponent === 'human'
       ? cleanName(nameCarrotEl.value, 'Carrot')
       : `Computer (${opponent})`;
-    return { R: cleanName(nameRabbitEl.value, 'Rabbit'), C: carrot };
+    return { R: cleanName(nameRabbitEl.value, 'Rabbit'), C: carrot, bot: opponent !== 'human' };
   }
 
   function play(index) {
@@ -59,7 +60,7 @@
 
   function afterFreeMove() {
     render();
-    if (state.over) return window.Leaderboard.record(state.winner, playerNames());
+    if (state.over) return window.Leaderboard.record(state.winner, gameNames || playerNames());
     if (computerTurn()) {
       carrotTimer = setTimeout(() => {
         carrotTimer = null;
@@ -165,6 +166,7 @@
       challenge = { puzzle: challenge.puzzle, rabbitMoves: 0, locked: false, message: '' };
     } else {
       state = createGame();
+      gameNames = playerNames();
     }
     render();
   }
@@ -192,8 +194,10 @@
     Ai.saveLevel(opponent);
     startGame();
   });
-  // Changing a name mid-game would credit the result to a different player, so restart.
-  [nameRabbitEl, nameCarrotEl].forEach((el) => el.addEventListener('change', startGame));
+  // Names are captured per game: an edit applies at once before the first move, otherwise from the next game.
+  [nameRabbitEl, nameCarrotEl].forEach((el) => el.addEventListener('change', () => {
+    if (!challenge && state.board.every((c) => c === null)) gameNames = playerNames();
+  }));
   resetEl.addEventListener('click', startGame);
   modeFreeEl.addEventListener('click', () => setMode(false));
   modeDailyEl.addEventListener('click', () => setMode(true));
