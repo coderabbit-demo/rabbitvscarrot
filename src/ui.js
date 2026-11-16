@@ -14,11 +14,15 @@
   const streakEl = document.getElementById('streak');
   const opponentEl = document.getElementById('opponent');
   const opponentWrapEl = document.getElementById('opponent-wrap');
+  const nameRabbitEl = document.getElementById('name-rabbit');
+  const nameCarrotEl = document.getElementById('name-carrot');
+  const namesEl = document.getElementById('names');
   const dailyNoteEl = document.getElementById('daily-note');
 
   let state = createGame();
   let challenge = null; // { puzzle, rabbitMoves, locked, message } while in daily mode
   let carrotTimer = null;
+  let gameNames = null; // identities captured when the game starts, so edits mid-game can't misattribute it
   let opponent = Ai.loadLevel(); // 'human' or an Ai level; the computer plays the carrot in free play
   const cells = [];
 
@@ -34,6 +38,15 @@
     }
   }
 
+  // Ladder identities. Against the computer the carrot is a rated bot named after its level.
+  function playerNames() {
+    const { cleanName } = window.Ladder;
+    const carrot = opponent === 'human'
+      ? cleanName(nameCarrotEl.value, 'Carrot')
+      : `Computer (${opponent})`;
+    return { R: cleanName(nameRabbitEl.value, 'Rabbit'), C: carrot, bot: opponent !== 'human' };
+  }
+
   function play(index) {
     if (challenge) return playChallenge(index);
     if (computerTurn()) return;
@@ -47,7 +60,7 @@
 
   function afterFreeMove() {
     render();
-    if (state.over) return window.Leaderboard.record(state.winner);
+    if (state.over) return window.Leaderboard.record(state.winner, gameNames || playerNames());
     if (computerTurn()) {
       carrotTimer = setTimeout(() => {
         carrotTimer = null;
@@ -112,6 +125,9 @@
       statusEl.textContent = `${NAMES[state.turn]} ${MARKS[state.turn]} to move`;
     }
     opponentWrapEl.hidden = challenge !== null;
+    namesEl.hidden = challenge !== null;
+    nameCarrotEl.disabled = opponent !== 'human';
+    nameCarrotEl.parentElement.hidden = opponent !== 'human';
     resetEl.textContent = challenge ? 'Retry' : 'Reset';
   }
 
@@ -150,6 +166,7 @@
       challenge = { puzzle: challenge.puzzle, rabbitMoves: 0, locked: false, message: '' };
     } else {
       state = createGame();
+      gameNames = playerNames();
     }
     render();
   }
@@ -168,12 +185,19 @@
     renderDaily();
   }
 
+  const saved = window.Leaderboard.savedNames();
+  if (saved.R) nameRabbitEl.value = saved.R;
+  if (saved.C && !/^Computer \(/.test(saved.C)) nameCarrotEl.value = saved.C;
   opponentEl.value = opponent;
   opponentEl.addEventListener('change', () => {
     opponent = opponentEl.value;
     Ai.saveLevel(opponent);
     startGame();
   });
+  // Names are captured per game: an edit applies at once before the first move, otherwise from the next game.
+  [nameRabbitEl, nameCarrotEl].forEach((el) => el.addEventListener('change', () => {
+    if (!challenge && state.board.every((c) => c === null)) gameNames = playerNames();
+  }));
   resetEl.addEventListener('click', startGame);
   modeFreeEl.addEventListener('click', () => setMode(false));
   modeDailyEl.addEventListener('click', () => setMode(true));
